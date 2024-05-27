@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+
+  controller:
+    image: ngrinder/controller:${NGRINDER_VERSION}
+    restart: always
+    container_name: controller
+    hostname: controller
+    sysctls:
+      - net.core.somaxconn=65000
+    volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
+      - ./ngrinder-data:/opt/ngrinder-controller
+    ports:
+      - 8888:80
+      - 16001:16001
+      - 12000-12009:12000-12009

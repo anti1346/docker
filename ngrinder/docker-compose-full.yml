@@ -1,0 +1,65 @@
+version: '3.8'
+services:
+
+  controller:
+    image: ngrinder/controller:${NGRINDER_VERSION}
+    restart: always
+    container_name: controller
+    hostname: controller
+    sysctls:
+      - net.core.somaxconn=65000
+    volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
+      - ./ngrinder-data:/opt/ngrinder-controller
+    ports:
+      - 8888:80
+      - 16001:16001
+      - 12000-12009:12000-12009
+
+  agent1:
+    image: ngrinder/agent:${NGRINDER_VERSION}
+    restart: always
+    container_name: agent1
+    hostname: agent1
+    sysctls:
+      - net.core.somaxconn=65000
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nproc:
+        soft: 1024000
+        hard: 1024000
+      nofile:
+        soft: 1024000
+        hard: 1024000
+    links:
+      - controller:controller
+    volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
+      #- ./ngrinder-agent:/opt/ngrinder-agent
+      #- ./ngrinder-agent/agent.conf:/opt/ngrinder-agent/.ngrinder-agent/agent.conf
+
+  agent2:
+    image: ngrinder/agent:${NGRINDER_VERSION}
+    restart: always
+    container_name: agent2
+    hostname: agent2
+    sysctls:
+      - net.core.somaxconn=65000
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nproc:
+        soft: 1024000
+        hard: 1024000
+      nofile:
+        soft: 1024000
+        hard: 1024000
+    links:
+      - controller:controller
+    volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
+      #- ./ngrinder-agent:/opt/ngrinder-agent
+      #- ./ngrinder-agent/agent.conf:/opt/ngrinder-agent/.ngrinder-agent/agent.conf
