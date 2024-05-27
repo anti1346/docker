@@ -1,0 +1,8 @@
+##ignore Files ##
+
+*.aof
+*.rdb
+*.log
+**/*.log
+redis-*
+.bk

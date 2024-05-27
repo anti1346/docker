@@ -1,0 +1,98 @@
+version: '3.7'
+services:
+
+  redis1:
+    image: anti1346/redis:6.0.6-alpine
+    build:
+      context: config
+      dockerfile: Dockerfile
+    container_name: redis1
+    restart: always
+    network_mode: host
+    environment:
+      - REQUIRE_PASSWORD=qustkdcjf
+      - REDIS_HOST=211.239.167.24
+      - REDIS_PORT=7001
+    volumes:
+      - ./redis-7001/data:/data
+      - ./redis-7001/logs:/logs
+
+  redis2:
+    image: anti1346/redis:6.0.6-alpine
+    build:
+      context: config 
+      dockerfile: Dockerfile
+    container_name: redis2
+    restart: always
+    network_mode: host
+    environment:
+      - REQUIRE_PASSWORD=qustkdcjf
+      - REDIS_HOST=211.239.167.24
+      - REDIS_PORT=7002
+    volumes:
+      - ./redis-7002/data:/data
+      - ./redis-7002/logs:/logs
+
+  redis3:
+    image: anti1346/redis:6.0.6-alpine
+    build:
+      context: config
+      dockerfile: Dockerfile
+    container_name: redis3
+    restart: always
+    network_mode: host
+    environment:
+      - REQUIRE_PASSWORD=qustkdcjf
+      - REDIS_HOST=211.239.167.24
+      - REDIS_PORT=7003
+    volumes:
+      - ./redis-7003/data:/data
+      - ./redis-7003/logs:/logs
+
+  redis4:
+    image: anti1346/redis:6.0.6-alpine
+    build:
+      context: config
+      dockerfile: Dockerfile
+    container_name: redis4
+    restart: always
+    network_mode: host
+    environment:
+      - REQUIRE_PASSWORD=qustkdcjf
+      - REDIS_HOST=211.239.167.24
+      - REDIS_PORT=7004
+    volumes:
+      - ./redis-7004/data:/data
+      - ./redis-7004/logs:/logs
+
+  redis5:
+    image: anti1346/redis:6.0.6-alpine
+    build:
+      context: config 
+      dockerfile: Dockerfile
+    container_name: redis5
+    restart: always
+    network_mode: host
+    environment:
+      - REQUIRE_PASSWORD=qustkdcjf
+      - REDIS_HOST=211.239.167.24
+      - REDIS_PORT=7005
+    volumes:
+      - ./redis-7005/data:/data
+      - ./redis-7005/logs:/logs
+
+  redis6:
+    image: anti1346/redis:6.0.6-alpine
+    build:
+      context: config
+      dockerfile: Dockerfile
+    container_name: redis6
+    restart: always
+    network_mode: host
+    environment:
+      - REQUIRE_PASSWORD=qustkdcjf
+      - REDIS_HOST=211.239.167.24
+      - REDIS_PORT=7006
+    volumes:
+      - ./redis-7006/data:/data
+      - ./redis-7006/logs:/logs

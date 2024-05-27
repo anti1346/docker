@@ -1,0 +1,31 @@
+# server.name: kibana
+server.host: "0.0.0.0"
+# server.publicBaseUrl: "http://211.239.123.221:5601/"
+
+# # Elasticsearch settings
+elasticsearch.hosts:  ["https://es01:9200"]
+
+elasticsearch.serviceAccountToken: "AAEAAWVsYXN0aWMva2liYW5hL2RldmRhc2hib2FyZDpGSzFlZDVERFRNMlRCV0ROWjF5WnNR"
+
+# elasticsearch.ssl.verificationMode : 'none'
+
+# elasticsearch.ssl.certificateAuthorities: [ "config/certs/ca/ca.crt" ]
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "pass@123"
+
+# xpack.reporting.roles.enabled: false
+
+# # Elasticsearch monitoring settings
+# monitoring.ui.container.elasticsearch.enabled: true
+
+# # SSL settings
+# server.ssl.enabled: true
+# server.ssl.key: "config/certs/kibana/kibana.key"
+# server.ssl.certificate: "config/certs/kibana/kibana.crt"
+# server.ssl.certificateAuthorities: [ "config/certs/ca/ca.crt" ]
+
+### X-Pack Security
+xpack.reporting.kibanaServer.hostname: kibana
+xpack.encryptedSavedObjects.encryptionKey: 7e49845da89ccadbd8edd88bf916a4cb
+xpack.reporting.encryptionKey: 9d2ca991f312f4e902eb55be8acf0c04
+xpack.security.encryptionKey: e5ecee4f60cb4791b1d1ad16e1986c38

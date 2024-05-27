@@ -1,0 +1,70 @@
+version: '3.9'
+services:
+
+  es03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    container_name: es03
+    hostname: es03
+    environment:
+      - node.name=es03
+      - cluster.name=${CLUSTER_NAME}
+      - network.host=0.0.0.0
+      - network.bind_host=0.0.0.0
+      - network.publish_host=${ES03_IP}
+      - http.port=9200
+      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es01,es02,es03
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=certs/es03/es03.key
+      - xpack.security.http.ssl.certificate=certs/es03/es03.crt
+      - xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.http.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.key=certs/es03/es03.key
+      - xpack.security.transport.ssl.certificate=certs/es03/es03.crt
+      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.license.self_generated.type=${LICENSE}
+    mem_limit: ${MEM_LIMIT}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 262144
+        hard: 262144
+    extra_hosts:
+      - es01:${ES01_IP}
+      - es02:${ES02_IP}
+      - es03:${ES03_IP}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --cacert config/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+    volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
+      - ./../certs:/usr/share/elasticsearch/config/certs
+      - ./esdata:/usr/share/elasticsearch/data
+    # network_mode: host
+    expose:
+      - 9200
+      - 9300
+    ports:
+      - ${ES_HTTP}:9200
+      - ${ES_TRANSPORT}:9300
+    networks:
+      - efk-net
+
+
+networks:
+  efk-net:
+    name: efk-net
+    driver: bridge

@@ -1,0 +1,56 @@
+<source>
+  @type syslog
+  @label @mainstream
+  port 5140
+  bind "0.0.0.0"
+  tag "system"
+  <parse>
+    @type "multi_format"
+    <pattern>
+      format /^(?<time>\S+ \S+ \S+) (?<hostname>\S+) (?<shell>\S+) \[ LC_IP:(?<LC_IP>\S+) IP:(?<IP>\S+) LUID=(?<LUID>\S+) CUID=(?<CUID>\S+) TTY:(?<TTY>\S+) PWD:(?<PWD>\S+) \] (?<COMMAND>[^\n]*)/
+      expression ^(?<time>\S+ \S+ \S+) (?<hostname>\S+) (?<shell>\S+) \[ LC_IP:(?<LC_IP>\S+) IP:(?<IP>\S+) LUID=(?<LUID>\S+) CUID=(?<CUID>\S+) TTY:(?<TTY>\S+) PWD:(?<PWD>\S+) \] (?<COMMAND>[^\n]*)
+      ignorecase false
+      multiline false
+    </pattern>
+    <pattern>
+      format /^(?<time>\S+ \S+ \S+) (?<hostname>\S+) (?<process>\S+) (?<log>[^\n]*)/
+      expression ^(?<time>\S+ \S+ \S+) (?<hostname>\S+) (?<process>\S+) (?<log>[^\n]*)
+      ignorecase false
+      multiline false
+    </pattern>
+    <pattern>
+      format none
+      message_key "log"
+    </pattern>
+  </parse>
+</source>
+<label @mainstream>
+  <match system.**>
+    @type forest
+    subtype "copy"
+    remove_prefix "service"
+    <template>
+      <store>
+        @type elasticsearch
+        host elasticsearch
+        port 9200
+        log_es_400_reason true
+        logstash_format true
+        logstash_prefix fluentd-syslog
+        logstash_dateformat %Y%m%d
+        include_tag_key true
+        index_name fluentd-syslog
+        type_name fluentd-syslog
+        <buffer tag>
+          @type file
+          path /fluentd/log/buffer/${tag}
+          flush_thread_count 2
+          flush_interval 5s
+          chunk_limit_size 64M
+          total_limit_size 1G
+          queued_chunks_limit_size 100
+        </buffer>
+      </store>
+    </template>
+  </match>
+</label>

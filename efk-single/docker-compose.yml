@@ -1,0 +1,87 @@
+---
+version: "3"
+services:
+
+  fluentd-aggregator:
+    build: ./fluentd
+    image: glab.4wxyz.com:4567/docker-registry/docker-fluentd:1.9.1
+    container_name: fluentd-aggregator
+    hostname: fluentd-aggregator
+    #network_mode: host
+    environment:
+      - TZ=Asia/Seoul
+    labels:
+        - fluentd-aggregator
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ./fluentd/fluent.conf:/fluentd/etc/fluent.conf
+        #- ./fd_log:/fluentd/log
+    links:
+      - elasticsearch
+    ports:
+      - "5140:5140"
+      - "5140:5140/udp"
+
+
+  elasticsearch:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:6.8.6"
+    container_name: elasticsearch
+    hostname: elasticsearch
+    environment:
+      - "ELASTIC_PASSWORD=changeme"
+      - cluster.name=efk-cluster
+      - node.name=es-node-1
+      - path.data=/usr/share/elasticsearch/data
+      - http.port=9200
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    # Health check to confirm availability of ES. Other containers wait on this.
+    healthcheck:
+      test: ["CMD", "curl","-s" ,"-f", "-u", "elastic:changeme", "http://localhost:9200/_cat/health"]
+    volumes:
+      #- /etc/localtime:/etc/localtime:ro
+      # ES data dir mount to local drive
+      - ./es_data:/usr/share/elasticsearch/data
+    ports:
+      - '9200:9200'
+
+
+  kibana:
+    image: "docker.elastic.co/kibana/kibana:6.8.6"
+    container_name: kibana
+    hostname: kibana
+    environment:
+      - "ELASTICSEARCH_USERNAME=elastic"
+      - "ELASTICSEARCH_PASSWORD=changeme"
+      - server.port=0.0.0.0:5601
+      - elasticsearch.url="http://elasticsearch:9200"
+      - server.name="kibana"
+    ports:
+      - '5601:5601'
+    # Health check to confirm availability of Kibana
+    healthcheck:
+      test: ["CMD", "curl", "-s", "-f", "http://localhost:5601/login"]
+      retries: 6
+    # We don't start Kibana until the ES instance is ready
+    links:
+      - elasticsearch
+    depends_on:
+      - elasticsearch
+    ports:
+      - '5601:5601'
+
