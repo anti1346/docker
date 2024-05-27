@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  squid:
+    image: ubuntu/squid:5.2-22.04_beta
+    restart: unless-stopped
+    container_name: squid
+    volumes:
+      - ./squid.conf:/etc/squid/squid.conf
+      - ./domains.list:/etc/squid/domains.txt
+      - ./ips.list:/etc/squid/ips.txt
+      - ./data:/var/spool/squid
+      - ./log:/var/log/squid
+    ports:
+      - 8080:3128
