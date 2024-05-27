@@ -1,0 +1,11 @@
+version: '3'
+services:
+
+  haproxy:
+    build: ./sourcefile
+    image: glab.4wxyz.com:4567/anti1346/haproxy:2.0.5
+    #image: haproxy
+    container_name: haproxy
+    network_mode: host
+    volumes:
+      - ./conf/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
