@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+
+  ### 16.10.1-ee.0
+  gitlab:
+    image: gitlab/gitlab-ee:latest
+    container_name: gitlab
+    restart: always
+    hostname: ${GITLAB_HOST}
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://${GITLAB_HOST}:8443'
+        gitlab_rails['time_zone'] = 'Asia/Seoul'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+        letsencrypt['enable'] = false
+        nginx['enable'] = true
+        nginx['listen_port'] = 8443
+        nginx['redirect_http_to_https'] = true
+        nginx['ssl_certificate'] = "/etc/gitlab/certs/fullchain1.pem"
+        nginx['ssl_certificate_key'] = "/etc/gitlab/certs/privkey1.pem"
+    volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
+      - ./gitlab/config:/etc/gitlab:rw
+      - ./gitlab/data:/var/opt/gitlab:rw
+      - ./gitlab/logs:/var/log/gitlab:rw
+      - ./gitlab/backups:/var/opt/gitlab/backups
+      - /etc/letsencrypt/archive/gitlab.example.com:/etc/gitlab/certs
+    shm_size: '256m'
+    ports:
+      - "2222:22"
+      - "8080:80"
+      - "8443:8443"
+      - "5000:5000"
+    networks:
+      - gitlab_net
+
+networks:
+  gitlab_net:
+    name: gitlab_net
