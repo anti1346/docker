@@ -1,0 +1,54 @@
+FROM ubuntu:22.04
+
+LABEL website="sangchul.kr"
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG SSH_ROOT_PASSWORD=${SSH_ROOT_PASSWORD:-root}
+ARG SSH_USER=${SSH_USER:-ubuntu}
+ARG SSH_PASSWORD=${SSH_PASSWORD:-ubuntu}
+
+ENV TZ=Asia/Seoul
+ENV SSH_ROOT_PASSWORD=${SSH_ROOT_PASSWORD}
+ENV SSH_USER=${SSH_USER}
+ENV SSH_PASSWORD=${SSH_PASSWORD}
+
+
+# Set timezone
+RUN echo $TZ > /etc/timezone
+
+# Update and install packages
+RUN apt update \
+    && apt upgrade -qq -y \
+    && apt install -qq -y openssh-server \
+        aptitude sudo ssh vim curl \
+        net-tools iputils-ping traceroute netcat telnet dnsutils \
+    && mkdir /var/run/sshd \
+    && apt-get clean autoclean \
+    && apt-get autoremove --yes \
+    && rm -rf /var/lib/apt/lists/* /var/lib/dpkg/info /tmp/* /var/tmp/* \
+    && apt upgrade -qq -y
+
+# Configure SSH server
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config \
+    && sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/g' /etc/ssh/sshd_config \
+    && sed -i 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+
+# Configure root user
+RUN cp -rf /etc/skel/.bash* /root/. \
+    && echo "root:$SSH_ROOT_PASSWORD" | chpasswd \
+    && echo 'export PS1="\[\033[01;32m\]\u\[\e[m\]\[\033[01;32m\]@\[\e[m\]\[\033[01;32m\]\h\[\e[m\]:\[\033[01;34m\]\W\[\e[m\]$ "' >> ~/.bashrc \
+    && mkdir -m 700 ~/.ssh \
+    && echo "alias ll='ls -alh'" >> ~/.bashrc
+
+# Create a new user
+RUN useradd -c "$SSH_USER" -m -d /home/$SSH_USER -s /bin/bash $SSH_USER \
+    && usermod -aG sudo $SSH_USER \
+    && echo "$SSH_USER:$SSH_PASSWORD" | chpasswd \
+    && echo 'export PS1="\[\e[33m\]\u\[\e[m\]\[\e[37m\]@\[\e[m\]\[\e[34m\]\h\[\e[m\]:\[\033[01;31m\]\W\[\e[m\]$ "' >> /home/$SSH_USER/.bashrc \
+    && ssh-keygen -t rsa -f ~/.ssh/id_rsa -N '' -C "SSH Key" \
+    && echo "alias ll='ls -alh'" >> /home/$SSH_USER/.bashrc \
+    && echo "$SSH_USER ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]

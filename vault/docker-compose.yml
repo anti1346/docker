@@ -1,0 +1,43 @@
+version: '3.9'
+services:
+
+  ssh-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.ssh
+    image: vault-ssh-server:latest
+    # platform: linux/arm64/v8
+    container_name: ssh-server
+    restart: unless-stopped
+    hostname: ssh-server
+    volumes:
+      - ./ssh:/root/.ssh
+    ports:
+      - 22:22
+    networks:
+      - app-network
+
+  vault:
+    image: vault:latest
+    # platform: linux/arm64/v8
+    container_name: vault
+    restart: unless-stopped
+    hostname: vault
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=my_root_vault_token
+      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
+    cap_add:
+      - IPC_LOCK
+    # command: vault server -config=/vault/config/config.hcl
+    volumes:
+      # - ./vault/config:/vault/config
+      - ./vault/data:/vault/data
+      # - ./vault/logs:/vault/logs
+    ports:
+      - 8200:8200
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
