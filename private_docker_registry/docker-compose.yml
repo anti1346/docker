@@ -1,0 +1,81 @@
+version: '3.9'
+services:
+
+  nginx:
+    image: nginx:1.26.1
+    container_name: nginx
+    restart: unless-stopped
+    volumes:
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/letsencrypt:/etc/nginx/letsencrypt
+    depends_on:
+      - registry-ui
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - registry-net
+
+  redis:
+    image: redis:7.2.5
+    container_name: redis
+    environment:
+      - REDIS_PASSWORD=<redis_secret>
+    networks:
+      - registry-net
+
+  registry-ui:
+    image: joxit/docker-registry-ui:main
+    container_name: registry-ui
+    restart: always
+    hostname: registry-ui
+    environment:
+      - REGISTRY_TITLE=Docker Registry UI
+      - NGINX_PROXY_PASS_URL=http://registry-server:5000
+      - SINGLE_REGISTRY=true
+      - DELETE_IMAGES=true
+      - SHOW_CONTENT_DIGEST=true
+      - SHOW_CATALOG_NB_TAGS=true
+      - CATALOG_MIN_BRANCHES=1
+      - CATALOG_MAX_BRANCHES=1
+      - TAGLIST_PAGE_SIZE=100
+      - REGISTRY_SECURED=false
+      - CATALOG_ELEMENTS_LIMIT=1000
+    depends_on:
+      - registry-server
+    ports:
+      - 8080:80
+    networks:
+      - registry-net
+
+  registry-server:
+    image: registry:2.8.2
+    container_name: registry-server
+    restart: always
+    hostname: registry-server
+    environment:
+      - REGISTRY_AUTH=htpasswd
+      - REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm"
+      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd
+      - REGISTRY_REDIS_ADDR=redis:6379
+      - REGISTRY_REDIS_PASSWORD=<redis_secret>
+      - REGISTRY_REDIS_DB=0
+      - REGISTRY_REDIS_DIALTIMEOUT=10ms
+      - REGISTRY_REDIS_READTIMEOUT=10ms
+      - REGISTRY_REDIS_WRITETIMEOUT=10ms
+      - REGISTRY_REDIS_POOL_MAXIDLE=16
+      - REGISTRY_REDIS_POOL_MAXACTIVE=64
+      - REGISTRY_REDIS_POOL_IDLETIMEOUT=300s
+    volumes:
+      - ./registry/config.yml:/etc/docker/registry/config.yml
+      - ./registry/data:/var/lib/registry
+      - ./registry/auth:/auth
+    ports:
+      - 5000:5000
+    networks:
+      - registry-net
+
+networks:
+  registry-net:
+    name: registry-net
+    driver: bridge
