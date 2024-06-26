@@ -1,0 +1,62 @@
+groups:
+  - name: LinkisAlert
+    rules:
+      - alert: LinkisNodeDown
+        expr: last_over_time(up{job="linkis", application=~"LINKISI.*", application!="LINKIS-CG-ENGINECONN"}[1m])== 0
+        for: 15s
+        labels:
+          severity: critical
+          service: Linkis
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "instance: {{ $labels.instance }} down"
+          description: "Linkis instance(s) is/are down in last 1m"
+          value: "{{ $value }}"
+
+      - alert: LinkisNodeCpuHigh
+        expr: system_cpu_usage{job="linkis", application=~"LINKIS.*"} >= 0.8
+        for: 1m
+        labels:
+          severity: warning
+          service: Linkis
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "instance: {{ $labels.instance }} cpu overload"
+          description: "CPU usage is over 80% for over 1min"
+          value: "{{ $value }}"
+
+      - alert: LinkisNodeHeapMemoryHigh
+        expr: sum(jvm_memory_used_bytes{job="linkis", application=~"LINKIS.*", area="heap"}) by(instance) *100/sum(jvm_memory_max_bytes{job="linkis", application=~"LINKIS.*", area="heap"}) by(instance) >= 50
+        for: 1m
+        labels:
+          severity: warning
+          service: Linkis
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "instance: {{ $labels.instance }} memory(heap) overload"
+          description: "Memory usage(heap) is over 80% for over 1min"
+          value: "{{ $value }}"
+
+      - alert: LinkisNodeNonHeapMemoryHigh
+        expr: sum(jvm_memory_used_bytes{job="linkis", application=~"LINKIS.*", area="nonheap"}) by(instance) *100/sum(jvm_memory_max_bytes{job="linkis", application=~"LINKIS.*", area="nonheap"}) by(instance) >= 60
+        for: 1m
+        labels:
+          severity: warning
+          service: Linkis
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "instance: {{ $labels.instance }} memory(nonheap) overload"
+          description: "Memory usage(nonheap) is over 80% for over 1min"
+          value: "{{ $value }}"
+
+      - alert: LinkisWaitingThreadHigh
+        expr: jvm_threads_states_threads{job="linkis", application=~"LINKIS.*", state="waiting"} >= 100
+        for: 1m
+        labels:
+          severity: warning
+          service: Linkis
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "instance: {{ $labels.instance }} waiting threads is high"
+          description: "waiting threads is over 100 for over 1min"
+          value: "{{ $value }}"

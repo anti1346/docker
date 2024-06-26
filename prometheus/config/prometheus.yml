@@ -1,0 +1,16 @@
+global:
+  scrape_interval:     5s   # 메트릭 수집 간격 (기본 설정)
+  evaluation_interval: 5s   # 규칙 평가 간격
+
+scrape_configs:
+  - job_name: 'prometheus'   # 스크랩 타겟 설정
+    static_configs:
+      - targets: ['localhost:9090']   # 자기 자신을 스크랩하는 예시
+
+  - job_name: 'node_exporter'   # Node Exporter 메트릭 스크랩 설정
+    static_configs:
+      - targets: ['node_exporter:9100']   # Node Exporter의 주소
+
+  - job_name: 'cadvisor'   # cAdvisor 메트릭 스크랩 설정
+    static_configs:
+      - targets: ['cadvisor:8098']   # cAdvisor의 주소
