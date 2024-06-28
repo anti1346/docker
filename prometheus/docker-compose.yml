@@ -47,7 +47,6 @@ services:
     networks:
       - mo-net
 
-
   node_exporter:
     image: quay.io/prometheus/node-exporter:v1.5.0
     container_name: node_exporter
