@@ -57,8 +57,10 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - /dev/kmsg:/dev/kmsg
     ports:
-      - 8098:8098
+      - 8080:8080
     networks:
       - prometheus-net
 
