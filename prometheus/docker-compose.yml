@@ -19,7 +19,7 @@ services:
     ports:
       - 9090:9090
     networks:
-      - mo-net
+      - prometheus-net
 
   alertmanager:
     image: prom/alertmanager:latest
@@ -30,7 +30,7 @@ services:
     ports:
       - 9093:9093
     networks:
-      - mo-net
+      - prometheus-net
 
   grafana:
     image: grafana/grafana-oss:latest
@@ -45,18 +45,7 @@ services:
     ports:
       - 3000:3000
     networks:
-      - mo-net
-
-  node_exporter:
-    image: quay.io/prometheus/node-exporter:v1.5.0
-    container_name: node_exporter
-    restart: unless-stopped
-    pid: host
-    command: '--path.rootfs=/host'
-    volumes:
-      - /:/host:ro,rslave
-    networks:
-      - mo-net
+      - prometheus-net
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -71,10 +60,10 @@ services:
     ports:
       - 8098:8098
     networks:
-      - mo-net
+      - prometheus-net
 
 networks:
-  mo-net:
+  prometheus-net:
     driver: bridge
 
 volumes:
