@@ -46,6 +46,7 @@ services:
   $(hostname)-promtail:
     image: grafana/promtail:2.9.1
     container_name: $(hostname)-promtail
+    restart: unless-stopped
     environment:
       - LOKI_SERVER=192.168.0.111
     command: --config.file=/etc/promtail/config.yaml
