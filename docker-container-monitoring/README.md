@@ -1,12 +1,12 @@
-### Docker Container Monitoring 
-### Create Directory 
-```
-mkdir -p /docker-container/docker-container-monitoring
-```
-```
-cd /docker-container/docker-container-monitoring
-```
+# Docker Container Monitoring 
 ### cadvisor
+#### Create Directory 
+```
+mkdir -p /docker-container/docker-cadvisor
+```
+```
+cd /docker-container/docker-cadvisor
+```
 ```
 cat <<EOF > docker-compose.yml
 version: '3.8'
@@ -29,6 +29,13 @@ EOF
 ```
 
 ### promtail
+#### Create Directory 
+```
+mkdir -p /docker-container/docker-promtail/promtail
+```
+```
+cd /docker-container/docker-promtail
+```
 ```
 cat <<EOF > docker-compose.yml
 version: '3.8'
@@ -46,9 +53,6 @@ services:
     ports:
       - 9080:9080
 EOF
-```
-```
-mkdir promtail
 ```
 ```
 cat <<EOF > promtail/config.yaml
