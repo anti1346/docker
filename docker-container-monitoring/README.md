@@ -27,6 +27,9 @@ services:
       - 8080:8080
 EOF
 ```
+```
+docker compose up -d
+```
 
 ### promtail
 #### Create Directory 
