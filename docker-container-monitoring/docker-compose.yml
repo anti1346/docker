@@ -18,9 +18,10 @@ services:
   promtail:
     image: grafana/promtail:2.9.1
     container_name: promtail
+    restart: unless-stopped
     environment:
       - LOKI_SERVER=${LOKI_SERVER}
-    command: -config.file=/etc/promtail/config.yaml
+    command: --config.file=/etc/promtail/config.yaml
     volumes:
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro

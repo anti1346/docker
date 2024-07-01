@@ -1,10 +1,10 @@
 ### Docker Container Monitoring 
 ### Create Directory 
 ```
-mkdir docker-container-monitoring
+mkdir -p /docker-container/docker-container-monitoring
 ```
 ```
-cd docker-container-monitoring
+cd /docker-container/docker-container-monitoring
 ```
 ### cadvisor
 ```
@@ -38,7 +38,7 @@ services:
     container_name: $(hostname)-promtail
     environment:
       - LOKI_SERVER=192.168.0.111
-    command: -config.file=/etc/promtail/config.yaml
+    command: --config.file=/etc/promtail/config.yaml
     volumes:
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
