@@ -26,6 +26,8 @@ services:
       - /dev/kmsg:/dev/kmsg
     ports:
       - 8080:8080
+    networks:
+      - mo-net
 
   $(hostname)-promtail:
     image: grafana/promtail:2.9.1
@@ -40,6 +42,12 @@ services:
       - ./promtail/config.yaml:/etc/promtail/config.yaml
     ports:
       - 9080:9080
+    networks:
+      - mo-net
+
+networks:
+  mo-net:
+    - name: mo-net
 ```
 ```
 cat <<'EOF' > promtail/config.yaml
