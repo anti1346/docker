@@ -70,7 +70,7 @@ scrape_configs:
   - targets:
       - localhost
     labels:
-      job: varlogs
+      job: varlogss
       __path__: /var/log/*log
 
 - job_name: containers
