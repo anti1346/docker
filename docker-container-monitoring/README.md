@@ -59,7 +59,7 @@ services:
 EOF
 ```
 ```
-cat <<EOF > promtail/config.yaml
+cat <<'EOF' > promtail/config.yaml
 server:
   http_listen_address: 0.0.0.0
   http_listen_port: 9080
