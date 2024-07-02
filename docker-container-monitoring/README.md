@@ -13,9 +13,9 @@ echo "LOKI_SERVER=192.168.0.111" > .env
 cat <<EOF > docker-compose.yml
 version: '3.8'
 services:
-  $(hostname)-cadvisor:
+  ${HOSTNAME}-cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.1
-    container_name: $(hostname)-cadvisor
+    container_name: ${HOSTNAME}-cadvisor
     restart: unless-stopped
     privileged: true
     volumes:
@@ -30,12 +30,12 @@ services:
     networks:
       - mo-net
 
-  $(hostname)-promtail:
+  ${HOSTNAME}-promtail:
     image: grafana/promtail:2.9.1
-    container_name: $(hostname)-promtail
+    container_name: ${HOSTNAME}-promtail
     restart: unless-stopped
     environment:
-      - LOKI_SERVER=${LOKI_SERVER}
+      - LOKI_SERVER=\${LOKI_SERVER}
     command: --config.file=/etc/promtail/config.yaml
     volumes:
       - /var/log:/var/log:ro
@@ -48,7 +48,7 @@ services:
 
 networks:
   mo-net:
-    - name: mo-net
+    name: mo-net
 EOF
 ```
 ```
