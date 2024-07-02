@@ -7,7 +7,7 @@ mkdir -p /docker-container/docker-container-monitoring/promtail
 cd /docker-container/docker-container-monitoring
 ```
 ```
-echo "hostname=$(hostname)" > .env
+echo "LOKI_SERVER=192.168.0.111" > .env
 ```
 ```
 version: '3.8'
