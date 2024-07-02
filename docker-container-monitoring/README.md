@@ -48,6 +48,7 @@ services:
 networks:
   mo-net:
     - name: mo-net
+EOF
 ```
 ```
 cat <<'EOF' > promtail/config.yaml
