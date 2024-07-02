@@ -10,6 +10,7 @@ cd /docker-container/docker-container-monitoring
 echo "LOKI_SERVER=192.168.0.111" > .env
 ```
 ```
+cat <<EOF > docker-compose.yml
 version: '3.8'
 services:
   $(hostname)-cadvisor:
