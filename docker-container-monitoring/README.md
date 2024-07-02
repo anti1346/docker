@@ -36,7 +36,7 @@ services:
     restart: unless-stopped
     environment:
       - LOKI_SERVER=\${LOKI_SERVER}
-    command: --config.file=/etc/promtail/config.yaml
+    command: --config.file=/etc/promtail/config.yaml -config.expand-env=true
     volumes:
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
