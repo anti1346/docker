@@ -97,7 +97,13 @@ scrape_configs:
 EOF
 ```
 ```
+docker compose config
+```
+```
 docker compose up -d
+```
+```
+docker compose ps
 ```
 
 <details>
