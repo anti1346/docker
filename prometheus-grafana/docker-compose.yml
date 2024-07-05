@@ -50,23 +50,23 @@ services:
     networks:
       - prometheus-net
 
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
-    restart: unless-stopped
-    privileged: true
-    volumes:
-      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
-      - /dev/kmsg:/dev/kmsg
-    #ports:
-    #  - 8090:8080
-    networks:
-      - prometheus-net
+  # cadvisor:
+  #   image: gcr.io/cadvisor/cadvisor:latest
+  #   container_name: cadvisor
+  #   restart: unless-stopped
+  #   privileged: true
+  #   volumes:
+  #     - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:ro
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+  #     - /dev/disk/:/dev/disk:ro
+  #     - /dev/kmsg:/dev/kmsg
+  #   #ports:
+  #   #  - 8090:8080
+  #   networks:
+  #     - prometheus-net
 
 networks:
   prometheus-net:
