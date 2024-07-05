@@ -75,14 +75,16 @@ networks:
 
 volumes:
   prometheus-data:
+    name: prometheus-data
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /docker-container/docker-prometheus/prometheus-data
+      device: ./prometheus-data
   grafana-data:
+    name: grafana-data
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /docker-container/docker-prometheus/grafana-data
+      device: ./grafana-data
