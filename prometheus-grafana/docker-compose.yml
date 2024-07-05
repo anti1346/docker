@@ -22,15 +22,19 @@ services:
     networks:
       - prometheus-net
 
-  alertmanager:
+  prometheus-alertmanager:
     image: prom/alertmanager:latest
-    container_name: alertmanager
+    container_name: prometheus-alertmanager
     restart: unless-stopped
+    environment:
+      - SLACK_API_URL=${SLACK_API_URL}
+      - SLACK_API_CHANNEL=${SLACK_API_CHANNEL}
     volumes:
       - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
       - ./config/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - ./config/alertmanager_templates:/usr/share/prometheus/alertmanager
     ports:
-      - 9093:9093
+      - 9094:9094
     networks:
       - prometheus-net
 
