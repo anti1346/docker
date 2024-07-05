@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
     volumes:
       - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
-      #- ./config/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - ./config/alertmanager.yml:/etc/alertmanager/alertmanager.yml
     ports:
       - 9093:9093
     networks:

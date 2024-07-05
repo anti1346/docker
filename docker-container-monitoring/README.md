@@ -19,6 +19,7 @@ services:
     restart: unless-stopped
     privileged: true
     volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
       - /:/rootfs:ro
       - /var/run:/var/run:ro
       - /sys:/sys:ro
@@ -38,6 +39,7 @@ services:
       - LOKI_SERVER=\${LOKI_SERVER}
     command: --config.file=/etc/promtail/config.yaml -config.expand-env=true
     volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./promtail/config.yaml:/etc/promtail/config.yaml
@@ -127,6 +129,7 @@ services:
     restart: unless-stopped
     privileged: true
     volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
       - /:/rootfs:ro
       - /var/run:/var/run:ro
       - /sys:/sys:ro
@@ -161,6 +164,7 @@ services:
       - LOKI_SERVER=192.168.0.111
     command: --config.file=/etc/promtail/config.yaml
     volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
       - /var/log:/var/log:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - ./promtail/config.yaml:/etc/promtail/config.yaml

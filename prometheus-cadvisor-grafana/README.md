@@ -1,4 +1,10 @@
-# prometheus
+# prometheus grafana(cadvisor)
+
+##### data directory create
+```
+mkdir grafana-data prometheus-data
+```
+
 Install Loki with Docker or Docker Compose
 https://grafana.com/docs/loki/latest/setup/install/docker/
 
@@ -7,6 +13,7 @@ https://grafana.com/docs/grafana-cloud/send-data/metrics/metrics-prometheus/prom
 
 
 https://grafana.com/grafana/dashboards/
+
 ```
 Dashboards
 - Docker Container & Host Metrics(Dashboard ID : 10619)
@@ -14,4 +21,5 @@ Dashboards
 - Docker-cAdvisor(Dashboard ID : 13946)
 - Node Exporter Full(Dashboard ID : 1860)
 - Prometheus 2.0 Overview(Dashboard ID : 3662)
+- Logs / App(Dashboard ID : 13639)
 ```
