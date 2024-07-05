@@ -9,6 +9,7 @@ services:
     volumes:
       - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
       - ./nginx/letsencrypt:/etc/nginx/letsencrypt
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
     ports:
       - "80:80"
       - "443:443"
@@ -24,6 +25,8 @@ services:
     hostname: redis
     environment:
       - REDIS_PASSWORD=secret1234
+    volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
     networks:
       - registry-net
 
@@ -44,6 +47,8 @@ services:
       - TAGLIST_PAGE_SIZE=100
       - REGISTRY_SECURED=false
       - CATALOG_ELEMENTS_LIMIT=1000
+    volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
     ports:
       - "8080:80"
     depends_on:
@@ -73,6 +78,7 @@ services:
       - ./registry/config.yml:/etc/docker/registry/config.yml
       - ./registry/data:/var/lib/registry
       - ./registry/auth:/auth
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
     ports:
       - "5000:5000"
     networks:
