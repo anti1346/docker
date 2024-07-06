@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  blue-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: anti1346/myapp-blue:latest
+    container_name: blue-app
+    hostname: blue-app
+    volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
+    ports:
+      - "8081:8080"
+    networks:
+      - myapp-net
+
+  green-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: anti1346/myapp-green:latest
+    container_name: green-app
+    hostname: green-app
+    volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
+    ports:
+      - "8082:8080"
+    networks:
+      - myapp-net
+
+  nginx:
+    image: anti1346/nginx-blue-green:latest
+    container_name: nginx
+    volumes:
+      - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - blue-app
+      - green-app
+    networks:
+      - myapp-net
+
+networks:
+  myapp-net:
+    name: myapp-net
+    driver: bridge
