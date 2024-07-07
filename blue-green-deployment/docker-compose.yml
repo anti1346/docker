@@ -1,6 +1,5 @@
-version: '3.8'
-
 services:
+
   blue-app:
     image: anti1346/demo:blue-green
     container_name: blue-app
