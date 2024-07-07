@@ -32,6 +32,7 @@ services:
     hostname: nginx
     volumes:
       - /usr/share/zoneinfo/Asia/Seoul:/etc/localtime:ro
+      # - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - blue-app
       - green-app
