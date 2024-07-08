@@ -1,12 +1,22 @@
 # Blue/Green Deployment
 
 
-##### nginx switch
+#### nginx switch
+##### Nginx의 백엔드를 green으로 전환
 ```
 docker exec -it nginx sh -c "/apps/switch.sh green"
 ```
+##### blue-app 서비스를 중지
+```
+docker compose stop blue-app
+```
+##### Nginx의 설정을 다시 blue 버전으로 전환
 ```
 docker exec -it nginx sh -c "/apps/switch.sh blue"
+```
+#### 모든 서비스를 실행
+```
+docker compose up -d
 ```
 
 <details>
